@@ -1,0 +1,14 @@
+{
+  "name": "gtfs-import-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for importing GTFS data into PostgreSQL",
+  "main": "import-gtfs.js",
+  "scripts": {
+    "import-gtfs": "node import-gtfs.js"
+  },
+  "dependencies": {
+    "pg": "^8.11.3",
+    "csv-parse": "^5.5.3",
+    "dotenv": "^16.4.5"
+  }
+} 
