@@ -6,12 +6,9 @@ import { CalendarService } from './calendar.service';
 import { CalendarDatesModule } from '../calendar_dates/calendar_dates.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Calendar]),
-    CalendarDatesModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Calendar]), CalendarDatesModule],
   controllers: [CalendarController],
   providers: [CalendarService],
   exports: [CalendarService],
 })
-export class CalendarModule {} 
+export class CalendarModule {}

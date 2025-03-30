@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
@@ -7,7 +13,7 @@ export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
   SUPER_ADMIN = 'super_admin',
-} 
+}
 
 @Entity('users')
 export class User {
@@ -49,4 +55,4 @@ export class User {
   async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 10);
   }
-} 
+}

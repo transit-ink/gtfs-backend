@@ -22,13 +22,15 @@ import { RolesGuard } from './guards/roles.guard';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User]),
-    ThrottlerModule.forRoot([{
-      ttl: 60, // 1 minute
-      limit: 20, // 20 requests per minute
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60, // 1 minute
+        limit: 20, // 20 requests per minute
+      },
+    ]),
   ],
   providers: [AuthService, JwtStrategy, RolesGuard],
   controllers: [AuthController],
   exports: [AuthService, JwtStrategy, PassportModule],
 })
-export class AuthModule {} 
+export class AuthModule {}

@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StopTime } from './stop-time.entity';
-import { PaginationParams, PaginatedResponse } from '../../common/interfaces/pagination.interface';
+import {
+  PaginationParams,
+  PaginatedResponse,
+} from '../../common/interfaces/pagination.interface';
 
 @Injectable()
 export class StopTimesService {
@@ -11,7 +14,10 @@ export class StopTimesService {
     private stopTimesRepository: Repository<StopTime>,
   ) {}
 
-  async findAll(tripId?: string, params?: PaginationParams): Promise<PaginatedResponse<StopTime>> {
+  async findAll(
+    tripId?: string,
+    params?: PaginationParams,
+  ): Promise<PaginatedResponse<StopTime>> {
     const {
       page = 1,
       limit = 10,
@@ -19,7 +25,8 @@ export class StopTimesService {
       sortOrder = 'ASC',
     } = params || {};
 
-    const queryBuilder = this.stopTimesRepository.createQueryBuilder('stop_time');
+    const queryBuilder =
+      this.stopTimesRepository.createQueryBuilder('stop_time');
 
     if (tripId) {
       queryBuilder.where('stop_time.trip_id = :tripId', { tripId });
@@ -46,7 +53,9 @@ export class StopTimesService {
   }
 
   async findOne(tripId: string): Promise<StopTime> {
-    const stopTime = await this.stopTimesRepository.findOneBy({ trip_id: tripId });
+    const stopTime = await this.stopTimesRepository.findOneBy({
+      trip_id: tripId,
+    });
     if (!stopTime) {
       throw new NotFoundException(`Stop time with trip ID ${tripId} not found`);
     }
@@ -60,7 +69,10 @@ export class StopTimesService {
 
   async update(tripId: string, stopTime: StopTime): Promise<StopTime> {
     const existingStopTime = await this.findOne(tripId);
-    const updatedStopTime = this.stopTimesRepository.merge(existingStopTime, stopTime);
+    const updatedStopTime = this.stopTimesRepository.merge(
+      existingStopTime,
+      stopTime,
+    );
     return this.stopTimesRepository.save(updatedStopTime);
   }
-} 
+}

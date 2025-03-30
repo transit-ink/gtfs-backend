@@ -22,4 +22,4 @@ import { StopTimesModule } from './stop_times/stop_times.module';
   controllers: [],
   providers: [],
 })
-export class GtfsModule {} 
+export class GtfsModule {}

@@ -5,4 +5,4 @@ export class RequestPasswordResetDto {
   @ApiProperty({ description: 'Email address for password reset' })
   @IsEmail()
   email: string;
-} 
+}

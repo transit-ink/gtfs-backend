@@ -20,10 +20,12 @@ export class Shape {
   @Column()
   shape_pt_sequence: number;
 
-  @ApiProperty({ description: 'Distance traveled along the shape from the first shape point' })
+  @ApiProperty({
+    description: 'Distance traveled along the shape from the first shape point',
+  })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   shape_dist_traveled?: number;
 
-  @OneToMany(() => Trip, trip => trip.shape)
+  @OneToMany(() => Trip, (trip) => trip.shape)
   trips: Trip[];
-} 
+}

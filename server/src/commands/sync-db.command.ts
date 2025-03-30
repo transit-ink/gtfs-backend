@@ -19,4 +19,4 @@ export class SyncDbCommand {
       process.exit(1);
     }
   }
-} 
+}

@@ -11,8 +11,15 @@ export class ShapesService {
     private shapeRepository: Repository<Shape>,
   ) {}
 
-  async findAll(params?: PaginationParams): Promise<{ data: Shape[]; meta: { total: number; totalPages: number } }> {
-    const { page = 1, limit = 10, sortBy = 'shape_id', sortOrder = 'ASC' } = params || {};
+  async findAll(
+    params?: PaginationParams,
+  ): Promise<{ data: Shape[]; meta: { total: number; totalPages: number } }> {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'shape_id',
+      sortOrder = 'ASC',
+    } = params || {};
     const skip = (page - 1) * limit;
 
     const [data, total] = await this.shapeRepository.findAndCount({
@@ -37,4 +44,4 @@ export class ShapesService {
   async findById(id: string): Promise<Shape[]> {
     return this.shapeRepository.find({ where: { shape_id: id } });
   }
-} 
+}

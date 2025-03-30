@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Stop } from './stop.entity';
-import { PaginationParams, PaginatedResponse } from '../../common/interfaces/pagination.interface';
+import {
+  PaginationParams,
+  PaginatedResponse,
+} from '../../common/interfaces/pagination.interface';
 
 @Injectable()
 export class StopsService {
@@ -60,7 +63,12 @@ export class StopsService {
     return this.stopRepository.save(updatedStop);
   }
 
-  async findByLatLon(lat: number, lon: number, radius: number, params?: PaginationParams): Promise<PaginatedResponse<Stop>> {
+  async findByLatLon(
+    lat: number,
+    lon: number,
+    radius: number,
+    params?: PaginationParams,
+  ): Promise<PaginatedResponse<Stop>> {
     const {
       page = 1,
       limit = 10,
@@ -70,8 +78,10 @@ export class StopsService {
 
     const queryBuilder = this.stopRepository
       .createQueryBuilder('stop')
-      .where('ST_DWithin(ST_MakePoint(stop.stop_lon, stop.stop_lat)::geography, ST_MakePoint(:lon, :lat)::geography, :radius)',
-        { lon, lat, radius });
+      .where(
+        'ST_DWithin(ST_MakePoint(stop.stop_lon, stop.stop_lat)::geography, ST_MakePoint(:lon, :lat)::geography, :radius)',
+        { lon, lat, radius },
+      );
 
     // Add sorting
     queryBuilder.orderBy(`stop.${sortBy}`, sortOrder);
@@ -92,4 +102,4 @@ export class StopsService {
       },
     };
   }
-} 
+}

@@ -10,4 +10,4 @@ import { ShapesService } from './shapes.service';
   providers: [ShapesService],
   exports: [ShapesService],
 })
-export class ShapesModule {} 
+export class ShapesModule {}

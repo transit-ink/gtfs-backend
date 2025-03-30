@@ -22,7 +22,9 @@ export class Stop {
   @PrimaryColumn()
   stop_id: string;
 
-  @ApiProperty({ description: 'Short text or number that identifies the stop for riders' })
+  @ApiProperty({
+    description: 'Short text or number that identifies the stop for riders',
+  })
   @Column({ nullable: true })
   stop_code?: string;
 
@@ -66,7 +68,9 @@ export class Stop {
   @Column({ nullable: true })
   stop_timezone?: string;
 
-  @ApiProperty({ description: 'Indicates whether wheelchair boardings are possible' })
+  @ApiProperty({
+    description: 'Indicates whether wheelchair boardings are possible',
+  })
   @Column({ type: 'enum', enum: WheelchairBoarding, nullable: true })
   wheelchair_boarding?: WheelchairBoarding;
 
@@ -78,6 +82,6 @@ export class Stop {
   @Column({ nullable: true })
   platform_code?: string;
 
-  @OneToMany(() => StopTime, stopTime => stopTime.stop)
+  @OneToMany(() => StopTime, (stopTime) => stopTime.stop)
   stop_times: StopTime[];
 }

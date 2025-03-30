@@ -7,4 +7,4 @@ import { UtilsModule } from '../utils/utils.module';
   imports: [CommandModule, UtilsModule],
   providers: [SyncDbCommand],
 })
-export class CommandsModule {} 
+export class CommandsModule {}

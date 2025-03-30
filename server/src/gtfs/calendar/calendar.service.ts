@@ -15,7 +15,9 @@ export class CalendarService {
   }
 
   async findById(id: string): Promise<Calendar> {
-    const calendar = await this.calendarRepository.findOne({ where: { service_id: id } });
+    const calendar = await this.calendarRepository.findOne({
+      where: { service_id: id },
+    });
     if (!calendar) {
       throw new NotFoundException(`Calendar with service ID ${id} not found`);
     }
@@ -29,7 +31,10 @@ export class CalendarService {
 
   async update(id: string, calendar: Calendar): Promise<Calendar> {
     const existingCalendar = await this.findById(id);
-    const updatedCalendar = this.calendarRepository.merge(existingCalendar, calendar);
+    const updatedCalendar = this.calendarRepository.merge(
+      existingCalendar,
+      calendar,
+    );
     return this.calendarRepository.save(updatedCalendar);
   }
-} 
+}

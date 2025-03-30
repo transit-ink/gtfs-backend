@@ -22,10 +22,10 @@ import { User } from '../auth/entities/user.entity';
       Calendar,
       CalendarDate,
       Shape,
-      User
-    ])
+      User,
+    ]),
   ],
   providers: [DbSyncService],
-  exports: [DbSyncService]
+  exports: [DbSyncService],
 })
-export class UtilsModule {} 
+export class UtilsModule {}

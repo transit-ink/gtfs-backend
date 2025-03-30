@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -15,11 +30,31 @@ export class TripsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all trips' })
-  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page (default: 10)' })
-  @ApiQuery({ name: 'sortBy', required: false, description: 'Field to sort by (default: trip_id)' })
-  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sort order (ASC or DESC, default: ASC)' })
-  @ApiResponse({ status: 200, description: 'Returns paginated trips', type: [Trip] })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number (default: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of items per page (default: 10)',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    description: 'Field to sort by (default: trip_id)',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    description: 'Sort order (ASC or DESC, default: ASC)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns paginated trips',
+    type: [Trip],
+  })
   findAll(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
@@ -48,7 +83,11 @@ export class TripsController {
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new trip' })
-  @ApiResponse({ status: 201, description: 'The trip has been successfully created.', type: Trip })
+  @ApiResponse({
+    status: 201,
+    description: 'The trip has been successfully created.',
+    type: Trip,
+  })
   create(@Body() trip: Trip): Promise<Trip> {
     return this.tripsService.create(trip);
   }
@@ -58,8 +97,12 @@ export class TripsController {
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a trip' })
-  @ApiResponse({ status: 200, description: 'The trip has been successfully updated.', type: Trip })
+  @ApiResponse({
+    status: 200,
+    description: 'The trip has been successfully updated.',
+    type: Trip,
+  })
   update(@Param('id') id: string, @Body() trip: Trip): Promise<Trip> {
     return this.tripsService.update(id, trip);
   }
-} 
+}

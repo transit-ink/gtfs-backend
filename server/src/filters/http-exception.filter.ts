@@ -22,22 +22,26 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    let message = exception instanceof HttpException
-      ? exception.message
-      : 'Internal server error';
+    let message =
+      exception instanceof HttpException
+        ? exception.message
+        : 'Internal server error';
 
     let errorDetails = {};
-    
+
     // Handle validation errors
-    if (exception instanceof HttpException && status === HttpStatus.BAD_REQUEST) {
+    if (
+      exception instanceof HttpException &&
+      status === HttpStatus.BAD_REQUEST
+    ) {
       const response = exception.getResponse() as any;
       if (response.message && Array.isArray(response.message)) {
         message = 'Validation failed';
         errorDetails = {
           errors: response.message.map((error: string) => ({
             field: error.split(' ')[0],
-            message: error
-          }))
+            message: error,
+          })),
         };
       }
     }
@@ -48,7 +52,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       path: request.url,
       method: request.method,
       message,
-      ...errorDetails
+      ...errorDetails,
     };
 
     // Log the error
@@ -56,11 +60,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
       ...errorResponse,
       error: {
         name: exception instanceof Error ? exception.name : 'Unknown',
-        message: exception instanceof Error ? exception.message : 'Unknown error',
+        message:
+          exception instanceof Error ? exception.message : 'Unknown error',
         stack: exception instanceof Error ? exception.stack : undefined,
       },
     });
 
     response.status(status).json(errorResponse);
   }
-} 
+}

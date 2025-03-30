@@ -1,5 +1,18 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -14,15 +27,25 @@ export class CalendarDatesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all calendar dates' })
-  @ApiResponse({ status: 200, description: 'Returns all calendar dates', type: [CalendarDate] })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns all calendar dates',
+    type: [CalendarDate],
+  })
   findAll(): Promise<CalendarDate[]> {
     return this.calendarDatesService.findAll();
   }
 
   @Get(':serviceId')
   @ApiOperation({ summary: 'Get calendar dates by service ID' })
-  @ApiResponse({ status: 200, description: 'Returns the calendar dates', type: [CalendarDate] })
-  findByServiceId(@Param('serviceId') serviceId: string): Promise<CalendarDate[]> {
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the calendar dates',
+    type: [CalendarDate],
+  })
+  findByServiceId(
+    @Param('serviceId') serviceId: string,
+  ): Promise<CalendarDate[]> {
     return this.calendarDatesService.findByServiceId(serviceId);
   }
 
@@ -31,7 +54,11 @@ export class CalendarDatesController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new calendar date' })
-  @ApiResponse({ status: 201, description: 'Calendar date created successfully', type: CalendarDate })
+  @ApiResponse({
+    status: 201,
+    description: 'Calendar date created successfully',
+    type: CalendarDate,
+  })
   @ApiResponse({ status: 400, description: 'Invalid input' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
@@ -44,7 +71,11 @@ export class CalendarDatesController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update calendar date by ID' })
-  @ApiResponse({ status: 200, description: 'Calendar date updated successfully', type: CalendarDate })
+  @ApiResponse({
+    status: 200,
+    description: 'Calendar date updated successfully',
+    type: CalendarDate,
+  })
   @ApiResponse({ status: 404, description: 'Calendar date not found' })
   update(
     @Param('id') id: string,
@@ -52,4 +83,4 @@ export class CalendarDatesController {
   ): Promise<CalendarDate> {
     return this.calendarDatesService.update(id, calendarDate);
   }
-} 
+}

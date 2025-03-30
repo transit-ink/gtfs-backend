@@ -11,11 +11,31 @@ export class ShapesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all shapes' })
-  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page (default: 10)' })
-  @ApiQuery({ name: 'sortBy', required: false, description: 'Field to sort by (default: shape_id)' })
-  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sort order (ASC or DESC, default: ASC)' })
-  @ApiResponse({ status: 200, description: 'Returns paginated shapes', type: [Shape] })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number (default: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of items per page (default: 10)',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    description: 'Field to sort by (default: shape_id)',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    description: 'Sort order (ASC or DESC, default: ASC)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns paginated shapes',
+    type: [Shape],
+  })
   findAll(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
@@ -37,4 +57,4 @@ export class ShapesController {
   findById(@Param('id') id: string): Promise<Shape[]> {
     return this.shapesService.findById(id);
   }
-} 
+}

@@ -47,35 +47,49 @@ export class StopTime {
   @Column({ nullable: true })
   stop_tts_headsign?: string;
 
-  @ApiProperty({ description: 'Indicates whether passengers are picked up at the stop', enum: PickupType })
+  @ApiProperty({
+    description: 'Indicates whether passengers are picked up at the stop',
+    enum: PickupType,
+  })
   @Column({ type: 'enum', enum: PickupType, nullable: true })
   pickup_type?: PickupType;
 
-  @ApiProperty({ description: 'Indicates whether passengers are dropped off at the stop', enum: DropOffType })
+  @ApiProperty({
+    description: 'Indicates whether passengers are dropped off at the stop',
+    enum: DropOffType,
+  })
   @Column({ type: 'enum', enum: DropOffType, nullable: true })
   drop_off_type?: DropOffType;
 
-  @ApiProperty({ description: 'Indicates whether continuous pickup is available' })
+  @ApiProperty({
+    description: 'Indicates whether continuous pickup is available',
+  })
   @Column({ nullable: true })
   continuous_pickup?: string;
 
-  @ApiProperty({ description: 'Indicates whether continuous drop-off is available' })
+  @ApiProperty({
+    description: 'Indicates whether continuous drop-off is available',
+  })
   @Column({ nullable: true })
   continuous_drop_off?: string;
 
-  @ApiProperty({ description: 'Distance traveled along the shape from the first shape point' })
+  @ApiProperty({
+    description: 'Distance traveled along the shape from the first shape point',
+  })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   shape_dist_traveled?: number;
 
-  @ApiProperty({ description: 'Indicates whether the arrival and departure times are exact' })
+  @ApiProperty({
+    description: 'Indicates whether the arrival and departure times are exact',
+  })
   @Column({ type: 'boolean', nullable: true })
   timepoint?: boolean;
 
-  @ManyToOne(() => Trip, trip => trip.stop_times)
+  @ManyToOne(() => Trip, (trip) => trip.stop_times)
   @JoinColumn({ name: 'trip_id', referencedColumnName: 'trip_id' })
   trip: Trip;
 
-  @ManyToOne(() => Stop, stop => stop.stop_times)
+  @ManyToOne(() => Stop, (stop) => stop.stop_times)
   @JoinColumn({ name: 'stop_id', referencedColumnName: 'stop_id' })
   stop: Stop;
-} 
+}

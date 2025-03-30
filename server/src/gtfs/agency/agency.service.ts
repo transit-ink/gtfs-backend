@@ -15,7 +15,9 @@ export class AgencyService {
   }
 
   async findById(id: string): Promise<Agency> {
-    const agency = await this.agencyRepository.findOne({ where: { agency_id: id } });
+    const agency = await this.agencyRepository.findOne({
+      where: { agency_id: id },
+    });
     if (!agency) {
       throw new NotFoundException(`Agency with ID ${id} not found`);
     }
@@ -32,4 +34,4 @@ export class AgencyService {
     const updatedAgency = this.agencyRepository.merge(existingAgency, agency);
     return this.agencyRepository.save(updatedAgency);
   }
-} 
+}

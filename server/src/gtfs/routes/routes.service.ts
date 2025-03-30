@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Route } from './route.entity';
-import { PaginationParams, PaginatedResponse } from '../../common/interfaces/pagination.interface';
+import {
+  PaginationParams,
+  PaginatedResponse,
+} from '../../common/interfaces/pagination.interface';
 
 @Injectable()
 export class RoutesService {
@@ -11,7 +14,10 @@ export class RoutesService {
     private routesRepository: Repository<Route>,
   ) {}
 
-  async findAll(agencyId?: string, params?: PaginationParams): Promise<PaginatedResponse<Route>> {
+  async findAll(
+    agencyId?: string,
+    params?: PaginationParams,
+  ): Promise<PaginatedResponse<Route>> {
     const {
       page = 1,
       limit = 10,
@@ -53,7 +59,10 @@ export class RoutesService {
     return route;
   }
 
-  async findByAgency(agencyId: string, params?: PaginationParams): Promise<PaginatedResponse<Route>> {
+  async findByAgency(
+    agencyId: string,
+    params?: PaginationParams,
+  ): Promise<PaginatedResponse<Route>> {
     return this.findAll(agencyId, params);
   }
 
@@ -67,4 +76,4 @@ export class RoutesService {
     const updatedRoute = this.routesRepository.merge(existingRoute, route);
     return this.routesRepository.save(updatedRoute);
   }
-} 
+}

@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -15,12 +30,36 @@ export class RoutesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all routes' })
-  @ApiQuery({ name: 'agencyId', required: true, description: 'Filter routes by agency ID' })
-  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page (default: 10)' })
-  @ApiQuery({ name: 'sortBy', required: false, description: 'Field to sort by (default: route_id)' })
-  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sort order (ASC or DESC, default: ASC)' })
-  @ApiResponse({ status: 200, description: 'Returns paginated routes', type: [Route] })
+  @ApiQuery({
+    name: 'agencyId',
+    required: true,
+    description: 'Filter routes by agency ID',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number (default: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of items per page (default: 10)',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    description: 'Field to sort by (default: route_id)',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    description: 'Sort order (ASC or DESC, default: ASC)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns paginated routes',
+    type: [Route],
+  })
   findAll(
     @Query('agencyId') agencyId: string,
     @Query('page') page?: number,
@@ -49,7 +88,11 @@ export class RoutesController {
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new route' })
-  @ApiResponse({ status: 201, description: 'The route has been successfully created.', type: Route })
+  @ApiResponse({
+    status: 201,
+    description: 'The route has been successfully created.',
+    type: Route,
+  })
   create(@Body() route: Route): Promise<Route> {
     return this.routesService.create(route);
   }
@@ -59,8 +102,12 @@ export class RoutesController {
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a route' })
-  @ApiResponse({ status: 200, description: 'The route has been successfully updated.', type: Route })
+  @ApiResponse({
+    status: 200,
+    description: 'The route has been successfully updated.',
+    type: Route,
+  })
   update(@Param('id') id: string, @Body() route: Route): Promise<Route> {
     return this.routesService.update(id, route);
   }
-} 
+}

@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryColumn, OneToMany, BeforeInsert, BeforeUpdate } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Route } from '../routes/route.entity';
 import { IsNotEmpty, IsString, IsUrl, IsOptional } from 'class-validator';
@@ -53,7 +60,7 @@ export class Agency {
   @IsString()
   agency_email?: string;
 
-  @OneToMany(() => Route, route => route.agency)
+  @OneToMany(() => Route, (route) => route.agency)
   routes: Route[];
 
   @BeforeInsert()
@@ -72,4 +79,4 @@ export class Agency {
       throw new Error('agency_timezone is required');
     }
   }
-} 
+}

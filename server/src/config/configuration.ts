@@ -44,7 +44,7 @@ export const databaseConfig = registerAs('database', (): DatabaseConfig => {
     database: process.env.DB_NAME || 'gtfs',
     ssl: process.env.DB_SSL === 'true',
     maxConnections,
-    idleTimeout
+    idleTimeout,
   };
 });
 
@@ -69,4 +69,4 @@ export const jwtConfig = registerAs('jwt', (): JwtConfig => {
   return {
     secret,
   };
-}); 
+});

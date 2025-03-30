@@ -4,10 +4,21 @@ import { Repository, DataSource } from 'typeorm';
 import { Agency } from '../gtfs/agency/agency.entity';
 import { LocationType, Stop } from '../gtfs/stops/stop.entity';
 import { Route } from '../gtfs/routes/route.entity';
-import { BikesAllowed, Trip, WheelchairAccessible } from '../gtfs/trips/trip.entity';
-import { PickupType, DropOffType, StopTime } from '../gtfs/stop_times/stop-time.entity';
+import {
+  BikesAllowed,
+  Trip,
+  WheelchairAccessible,
+} from '../gtfs/trips/trip.entity';
+import {
+  PickupType,
+  DropOffType,
+  StopTime,
+} from '../gtfs/stop_times/stop-time.entity';
 import { Calendar } from '../gtfs/calendar/calendar.entity';
-import { CalendarDate, ExceptionType } from '../gtfs/calendar_dates/calendar-date.entity';
+import {
+  CalendarDate,
+  ExceptionType,
+} from '../gtfs/calendar_dates/calendar-date.entity';
 import { Shape } from '../gtfs/shapes/shape.entity';
 import { User, UserRole } from '../auth/entities/user.entity';
 
@@ -37,11 +48,13 @@ export class DbSyncService {
     private userRepository: Repository<User>,
   ) {}
 
-  private getColumnDefinitions(entity: any): { name: string; type: string; nullable: boolean }[] {
+  private getColumnDefinitions(
+    entity: any,
+  ): { name: string; type: string; nullable: boolean }[] {
     const metadata = this.dataSource.getMetadata(entity);
-    return metadata.columns.map(column => {
+    return metadata.columns.map((column) => {
       let type = 'varchar';
-      
+
       if (column.type === 'uuid') {
         type = 'uuid';
       } else if (column.type === 'int' || column.type === 'integer') {
@@ -63,17 +76,17 @@ export class DbSyncService {
       return {
         name: column.databaseName,
         type,
-        nullable: column.isNullable || false
+        nullable: column.isNullable || false,
       };
     });
   }
 
   async syncAllEntities(): Promise<void> {
     this.logger.log('Starting database synchronization...');
-    
+
     // Sync enums first
     await this.syncEnums();
-    
+
     await this.syncAgency();
     await this.syncStops();
     await this.syncRoutes();
@@ -96,36 +109,36 @@ export class DbSyncService {
       const enumDefinitions = [
         {
           name: 'role_enum',
-          values: Object.values(UserRole)
+          values: Object.values(UserRole),
         },
         {
           name: 'exception_type_enum',
-          values: Object.values(ExceptionType)
+          values: Object.values(ExceptionType),
         },
         {
           name: 'route_type_enum',
-          values: [0, 1, 2, 3, 4, 5, 6, 7, 800, 900]
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 800, 900],
         },
         {
           name: 'wheelchair_accessible_enum',
-          values: Object.values(WheelchairAccessible)
+          values: Object.values(WheelchairAccessible),
         },
         {
           name: 'bikes_allowed_enum',
-          values: Object.values(BikesAllowed)
+          values: Object.values(BikesAllowed),
         },
         {
           name: 'location_type_enum',
-          values: Object.values(LocationType)
+          values: Object.values(LocationType),
         },
         {
           name: 'pickup_type_enum',
-          values: Object.values(PickupType)
+          values: Object.values(PickupType),
         },
         {
           name: 'drop_off_type_enum',
-          values: Object.values(DropOffType)
-        }
+          values: Object.values(DropOffType),
+        },
       ];
 
       for (const enumDef of enumDefinitions) {
@@ -133,10 +146,10 @@ export class DbSyncService {
           DO $$ 
           BEGIN
             IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '${enumDef.name}') THEN
-              CREATE TYPE ${enumDef.name} AS ENUM (${enumDef.values.map(v => `'${v}'`).join(', ')});
+              CREATE TYPE ${enumDef.name} AS ENUM (${enumDef.values.map((v) => `'${v}'`).join(', ')});
             ELSE
               DROP TYPE ${enumDef.name} CASCADE;
-              CREATE TYPE ${enumDef.name} AS ENUM (${enumDef.values.map(v => `'${v}'`).join(', ')});
+              CREATE TYPE ${enumDef.name} AS ENUM (${enumDef.values.map((v) => `'${v}'`).join(', ')});
             END IF;
           END $$;
         `);
@@ -206,29 +219,37 @@ export class DbSyncService {
     await this.syncTable(tableName, columns);
   }
 
-  private async syncTable(tableName: string, columns: { name: string; type: string; nullable: boolean }[]): Promise<void> {
+  private async syncTable(
+    tableName: string,
+    columns: { name: string; type: string; nullable: boolean }[],
+  ): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
       // Check if table exists
-      const tableExists = await queryRunner.query(`
+      const tableExists = await queryRunner.query(
+        `
         SELECT EXISTS (
           SELECT FROM information_schema.tables 
           WHERE table_name = $1
         )
-      `, [tableName]);
+      `,
+        [tableName],
+      );
 
       if (!tableExists[0].exists) {
         this.logger.log(`Creating table ${tableName}`);
         // Create table with all columns
-        const columnDefinitions = columns.map(col => {
-          const isPrimaryKey = col.name === columns[0].name;
-          const nullable = col.nullable ? '' : 'NOT NULL';
-          return `${col.name} ${col.type} ${isPrimaryKey ? 'PRIMARY KEY' : ''} ${nullable}`;
-        }).join(',\n');
-        
+        const columnDefinitions = columns
+          .map((col) => {
+            const isPrimaryKey = col.name === columns[0].name;
+            const nullable = col.nullable ? '' : 'NOT NULL';
+            return `${col.name} ${col.type} ${isPrimaryKey ? 'PRIMARY KEY' : ''} ${nullable}`;
+          })
+          .join(',\n');
+
         await queryRunner.query(`
           CREATE TABLE ${tableName} (
             ${columnDefinitions}
@@ -236,18 +257,25 @@ export class DbSyncService {
         `);
       } else {
         // Get existing columns
-        const existingColumns = await queryRunner.query(`
+        const existingColumns = await queryRunner.query(
+          `
           SELECT column_name, data_type, is_nullable
           FROM information_schema.columns 
           WHERE table_name = $1
-        `, [tableName]);
+        `,
+          [tableName],
+        );
 
-        const existingColumnNames = existingColumns.map(col => col.column_name);
+        const existingColumnNames = existingColumns.map(
+          (col) => col.column_name,
+        );
 
         // Add missing columns and update constraints
         for (const column of columns) {
           if (!existingColumnNames.includes(column.name)) {
-            this.logger.log(`Adding column ${column.name} to table ${tableName}`);
+            this.logger.log(
+              `Adding column ${column.name} to table ${tableName}`,
+            );
             const nullable = column.nullable ? 'NULL' : 'NOT NULL';
             await queryRunner.query(`
               ALTER TABLE ${tableName} 
@@ -255,11 +283,17 @@ export class DbSyncService {
             `);
           } else {
             // Update NOT NULL constraint if needed
-            const existingColumn = existingColumns.find(col => col.column_name === column.name);
+            const existingColumn = existingColumns.find(
+              (col) => col.column_name === column.name,
+            );
             const currentNullable = existingColumn.is_nullable === 'YES';
             if (currentNullable !== column.nullable) {
-              this.logger.log(`Updating NULL constraint for table ${tableName} column ${column.name}`);
-              const nullable = column.nullable ? 'DROP NOT NULL' : 'SET NOT NULL';
+              this.logger.log(
+                `Updating NULL constraint for table ${tableName} column ${column.name}`,
+              );
+              const nullable = column.nullable
+                ? 'DROP NOT NULL'
+                : 'SET NOT NULL';
               await queryRunner.query(`
                 ALTER TABLE ${tableName} 
                 ALTER COLUMN ${column.name} ${nullable}
@@ -269,14 +303,17 @@ export class DbSyncService {
         }
 
         // Ensure primary key constraint exists
-        const primaryKeyExists = await queryRunner.query(`
+        const primaryKeyExists = await queryRunner.query(
+          `
           SELECT EXISTS (
             SELECT 1
             FROM information_schema.table_constraints
             WHERE table_name = $1
             AND constraint_type = 'PRIMARY KEY'
           )
-        `, [tableName]);
+        `,
+          [tableName],
+        );
 
         if (!primaryKeyExists[0].exists) {
           this.logger.log(`Adding primary key constraint to ${tableName}`);
@@ -296,4 +333,4 @@ export class DbSyncService {
       await queryRunner.release();
     }
   }
-} 
+}

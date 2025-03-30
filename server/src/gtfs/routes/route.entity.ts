@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Agency } from '../agency/agency.entity';
 import { Trip } from '../trips/trip.entity';
@@ -58,11 +65,15 @@ export class Route {
   @Column({ type: 'int', nullable: true })
   route_sort_order?: number;
 
-  @ApiProperty({ description: 'Indicates whether continuous pickup is available' })
+  @ApiProperty({
+    description: 'Indicates whether continuous pickup is available',
+  })
   @Column({ nullable: true })
   continuous_pickup?: string;
 
-  @ApiProperty({ description: 'Indicates whether continuous drop-off is available' })
+  @ApiProperty({
+    description: 'Indicates whether continuous drop-off is available',
+  })
   @Column({ nullable: true })
   continuous_drop_off?: string;
 
@@ -70,10 +81,10 @@ export class Route {
   @Column({ nullable: true })
   network_id?: string;
 
-  @ManyToOne(() => Agency, agency => agency.routes)
+  @ManyToOne(() => Agency, (agency) => agency.routes)
   @JoinColumn({ name: 'agency_id', referencedColumnName: 'agency_id' })
   agency: Agency;
 
-  @OneToMany(() => Trip, trip => trip.route)
+  @OneToMany(() => Trip, (trip) => trip.route)
   trips: Trip[];
 }

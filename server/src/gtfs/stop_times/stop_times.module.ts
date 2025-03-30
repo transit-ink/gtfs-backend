@@ -10,4 +10,4 @@ import { StopTimesService } from './stop_times.service';
   providers: [StopTimesService],
   exports: [StopTimesService],
 })
-export class StopTimesModule {} 
+export class StopTimesModule {}

@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Trip } from './trip.entity';
-import { PaginationParams, PaginatedResponse } from '../../common/interfaces/pagination.interface';
+import {
+  PaginationParams,
+  PaginatedResponse,
+} from '../../common/interfaces/pagination.interface';
 
 @Injectable()
 export class TripsService {
@@ -59,4 +62,4 @@ export class TripsService {
     const updatedTrip = this.tripRepository.merge(existingTrip, trip);
     return this.tripRepository.save(updatedTrip);
   }
-} 
+}

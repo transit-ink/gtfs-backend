@@ -14,12 +14,13 @@ export class CalendarDate {
   service_id: string;
 
   @ApiProperty({ description: 'Date of the service exception' })
-  @Column({ 
+  @Column({
     type: 'date',
     transformer: {
-      to: (value: string | Date) => value instanceof Date ? value : new Date(value),
-      from: (value: Date) => value
-    }
+      to: (value: string | Date) =>
+        value instanceof Date ? value : new Date(value),
+      from: (value: Date) => value,
+    },
   })
   date: string | Date;
 
@@ -27,7 +28,7 @@ export class CalendarDate {
   @Column({ type: 'enum', enum: ExceptionType })
   exception_type: ExceptionType;
 
-  @ManyToOne(() => Calendar, calendar => calendar.calendar_dates)
+  @ManyToOne(() => Calendar, (calendar) => calendar.calendar_dates)
   @JoinColumn({ name: 'service_id', referencedColumnName: 'service_id' })
   calendar: Calendar;
-} 
+}

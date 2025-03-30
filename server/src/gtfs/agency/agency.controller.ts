@@ -1,5 +1,18 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -14,7 +27,11 @@ export class AgencyController {
 
   @Get()
   @ApiOperation({ summary: 'Get all agencies' })
-  @ApiResponse({ status: 200, description: 'Returns all agencies', type: [Agency] })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns all agencies',
+    type: [Agency],
+  })
   findAll(): Promise<Agency[]> {
     return this.agencyService.findAll();
   }
@@ -32,7 +49,11 @@ export class AgencyController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new agency' })
-  @ApiResponse({ status: 201, description: 'Agency created successfully', type: Agency })
+  @ApiResponse({
+    status: 201,
+    description: 'Agency created successfully',
+    type: Agency,
+  })
   @ApiResponse({ status: 400, description: 'Invalid input' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
@@ -45,12 +66,13 @@ export class AgencyController {
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update agency by ID' })
-  @ApiResponse({ status: 200, description: 'Agency updated successfully', type: Agency })
+  @ApiResponse({
+    status: 200,
+    description: 'Agency updated successfully',
+    type: Agency,
+  })
   @ApiResponse({ status: 404, description: 'Agency not found' })
-  update(
-    @Param('id') id: string,
-    @Body() agency: Agency,
-  ): Promise<Agency> {
+  update(@Param('id') id: string, @Body() agency: Agency): Promise<Agency> {
     return this.agencyService.update(id, agency);
   }
-} 
+}

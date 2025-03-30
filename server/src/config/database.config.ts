@@ -11,7 +11,9 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from './configuration';
 import { User } from '../auth/entities/user.entity';
 
-export const getDatabaseConfig = (configService: ConfigService): TypeOrmModuleOptions => {
+export const getDatabaseConfig = (
+  configService: ConfigService,
+): TypeOrmModuleOptions => {
   const dbConfig = configService.get<DatabaseConfig>('database');
   if (!dbConfig) {
     throw new Error('Database configuration is not available');
@@ -33,15 +35,15 @@ export const getDatabaseConfig = (configService: ConfigService): TypeOrmModuleOp
       Calendar,
       CalendarDate,
       Shape,
-      User
+      User,
     ],
     synchronize: process.env.NODE_ENV !== 'production', // Set to false in production
     ssl: {
-      rejectUnauthorized: dbConfig.ssl
+      rejectUnauthorized: dbConfig.ssl,
     },
     poolSize: dbConfig.maxConnections,
     extra: {
-      idleTimeoutMillis: dbConfig.idleTimeout
-    }
+      idleTimeoutMillis: dbConfig.idleTimeout,
+    },
   };
-}; 
+};

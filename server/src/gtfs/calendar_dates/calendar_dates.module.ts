@@ -10,4 +10,4 @@ import { CalendarDatesService } from './calendar_dates.service';
   providers: [CalendarDatesService],
   exports: [CalendarDatesService],
 })
-export class CalendarDatesModule {} 
+export class CalendarDatesModule {}

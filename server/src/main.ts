@@ -24,7 +24,7 @@ async function bootstrap() {
       .setVersion('1.0')
       .addBearerAuth()
       .build();
-    
+
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
 
@@ -45,9 +45,11 @@ async function bootstrap() {
 
     // Enable CORS
     app.enableCors();
-    
+
     await app.listen(appConfig.port);
-    console.log(`Application is running on: http://localhost:${appConfig.port} in ${appConfig.nodeEnv} mode`);
+    console.log(
+      `Application is running on: http://localhost:${appConfig.port} in ${appConfig.nodeEnv} mode`,
+    );
   } catch (error) {
     console.error('Failed to start application:', error);
     process.exit(1);

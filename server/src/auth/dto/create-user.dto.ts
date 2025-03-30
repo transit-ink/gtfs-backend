@@ -22,4 +22,3 @@ export class CreateUserDto {
   @Type(() => String)
   password: string;
 }
-

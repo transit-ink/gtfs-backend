@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
@@ -71,7 +75,9 @@ export class AuthService {
 
     // Check if email is verified
     if (!user.isEmailVerified) {
-      throw new UnauthorizedException('Your email is not verified. Please reach out to us');
+      throw new UnauthorizedException(
+        'Your email is not verified. Please reach out to us',
+      );
     }
 
     // Generate token
@@ -91,11 +97,11 @@ export class AuthService {
   }
 
   private generateToken(user: User): string {
-    const payload = { 
-      username: user.username, 
+    const payload = {
+      username: user.username,
       sub: user.id,
       roles: user.roles,
     };
     return this.jwtService.sign(payload);
   }
-} 
+}

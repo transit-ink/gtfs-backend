@@ -9,31 +9,45 @@ export class Calendar {
   @PrimaryColumn()
   service_id: string;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Monday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Monday',
+  })
   @Column({ type: 'boolean' })
   monday: boolean;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Tuesday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Tuesday',
+  })
   @Column({ type: 'boolean' })
   tuesday: boolean;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Wednesday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Wednesday',
+  })
   @Column({ type: 'boolean' })
   wednesday: boolean;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Thursday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Thursday',
+  })
   @Column({ type: 'boolean' })
   thursday: boolean;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Friday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Friday',
+  })
   @Column({ type: 'boolean' })
   friday: boolean;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Saturday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Saturday',
+  })
   @Column({ type: 'boolean' })
   saturday: boolean;
 
-  @ApiProperty({ description: 'Indicates whether the service is available on Sunday' })
+  @ApiProperty({
+    description: 'Indicates whether the service is available on Sunday',
+  })
   @Column({ type: 'boolean' })
   sunday: boolean;
 
@@ -45,9 +59,12 @@ export class Calendar {
   @Column({ type: 'date' })
   end_date: Date;
 
-  @OneToMany(() => CalendarDate, (calendarDate: CalendarDate) => calendarDate.calendar)
+  @OneToMany(
+    () => CalendarDate,
+    (calendarDate: CalendarDate) => calendarDate.calendar,
+  )
   calendar_dates: CalendarDate[];
 
-  @OneToMany(() => Trip, trip => trip.calendar)
+  @OneToMany(() => Trip, (trip) => trip.calendar)
   trips: Trip[];
-} 
+}
