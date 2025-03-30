@@ -1,28 +1,37 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useState, FormEvent } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const Login = () => {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
+interface Credentials {
+  username: string;
+  password: string;
+}
+
+interface LocationState {
+  from: string;
+}
+
+const Login: React.FC = () => {
+  const [credentials, setCredentials] = useState<Credentials>({
+    username: '',
+    password: '',
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Get the redirect path from location state, or default to home
-  const from = location.state?.from || "/";
+  const from = (location.state as LocationState)?.from || '/';
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await login(credentials);
       // Navigate to the original attempted URL
       navigate(from, { replace: true });
     } catch (err) {
-      setError("Invalid credentials");
+      setError('Invalid credentials');
     }
   };
 
@@ -48,9 +57,7 @@ const Login = () => {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Username"
                 value={credentials.username}
-                onChange={(e) =>
-                  setCredentials({ ...credentials, username: e.target.value })
-                }
+                onChange={e => setCredentials({ ...credentials, username: e.target.value })}
               />
             </div>
             <div>
@@ -65,16 +72,12 @@ const Login = () => {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={credentials.password}
-                onChange={(e) =>
-                  setCredentials({ ...credentials, password: e.target.value })
-                }
+                onChange={e => setCredentials({ ...credentials, password: e.target.value })}
               />
             </div>
           </div>
 
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
-          )}
+          {error && <div className="text-red-600 text-sm text-center">{error}</div>}
 
           <div>
             <button

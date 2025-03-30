@@ -1,13 +1,13 @@
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const Profile = () => {
+const Profile: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate('/login');
   };
 
   return (
@@ -16,23 +16,20 @@ const Profile = () => {
         <div className="bg-white shadow rounded-lg p-6">
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Profile Information
-              </h3>
+              <h3 className="text-lg font-medium leading-6 text-gray-900">Profile Information</h3>
+              <p className="mt-1 text-sm text-gray-500">Your account details and preferences.</p>
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                   <div className="sm:col-span-1">
-                    <dt className="text-sm font-medium text-gray-500">
-                      Username
-                    </dt>
+                    <dt className="text-sm font-medium text-gray-500">Username</dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {localStorage.getItem("username") || "User"}
+                      {localStorage.getItem('username') || 'User'}
                     </dd>
                   </div>
                   <div className="sm:col-span-1">
                     <dt className="text-sm font-medium text-gray-500">Email</dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {localStorage.getItem("email") || "user@example.com"}
+                      {localStorage.getItem('email') || 'user@example.com'}
                     </dd>
                   </div>
                 </dl>
