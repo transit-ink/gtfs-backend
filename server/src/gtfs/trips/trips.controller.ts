@@ -1,27 +1,27 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
-  Body,
-  Param,
-  UseGuards,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
   ApiBearerAuth,
+  ApiOperation,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { UserRole } from '../../auth/entities/user.entity';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { PaginationParams } from '../../common/interfaces/pagination.interface';
 import { Trip } from './trip.entity';
 import { TripsService } from './trips.service';
-import { PaginationParams } from '../../common/interfaces/pagination.interface';
 
 @ApiTags('Trips')
 @Controller('gtfs/trips')
@@ -50,24 +50,47 @@ export class TripsController {
     required: false,
     description: 'Sort order (ASC or DESC, default: ASC)',
   })
+  @ApiQuery({
+    name: 'routeId',
+    required: false,
+    description: 'Filter trips by route ID',
+  })
   @ApiResponse({
     status: 200,
     description: 'Returns paginated trips',
     type: [Trip],
   })
   findAll(
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'ASC' | 'DESC',
+    @Query('routeId') routeId?: string,
   ) {
     const params: PaginationParams = {
-      page,
-      limit,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
       sortBy,
       sortOrder,
+      routeId,
     };
     return this.tripsService.findAll(params);
+  }
+
+  @Get('bulk')
+  @ApiOperation({ summary: 'Get trips by IDs' })
+  @ApiQuery({
+    name: 'ids',
+    required: true,
+    description: 'Comma-separated list of trip IDs',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the trips',
+    type: [Trip],
+  })
+  findBulk(@Query('ids') ids: string): Promise<Trip[]> {
+    return this.tripsService.findBulk(ids.split(','));
   }
 
   @Get(':id')

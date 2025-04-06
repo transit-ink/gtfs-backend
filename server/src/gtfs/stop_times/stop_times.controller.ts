@@ -1,27 +1,27 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
-  Body,
-  Param,
-  UseGuards,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
   ApiBearerAuth,
+  ApiOperation,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { UserRole } from '../../auth/entities/user.entity';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { PaginationParams } from '../../common/interfaces/pagination.interface';
 import { StopTime } from './stop-time.entity';
 import { StopTimesService } from './stop_times.service';
-import { PaginationParams } from '../../common/interfaces/pagination.interface';
 
 @ApiTags('Stop Times')
 @Controller('gtfs/stop_times')
@@ -33,7 +33,14 @@ export class StopTimesController {
   @ApiQuery({
     name: 'tripId',
     required: false,
-    description: 'Filter stop times by trip ID',
+    description:
+      'Filter stop times by trip ID. Multiple trip IDs can be provided as a comma-separated list.',
+  })
+  @ApiQuery({
+    name: 'stopId',
+    required: false,
+    description:
+      'Filter stop times by stop ID. Multiple stop IDs can be provided as a comma-separated list.',
   })
   @ApiQuery({
     name: 'page',
@@ -62,18 +69,23 @@ export class StopTimesController {
   })
   findAll(
     @Query('tripId') tripId?: string,
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('stopId') stopId?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'ASC' | 'DESC',
   ) {
     const params: PaginationParams = {
-      page,
-      limit,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
       sortBy,
       sortOrder,
     };
-    return this.stopTimesService.findAll(tripId, params);
+    return this.stopTimesService.findAll({
+      tripIds: tripId ? tripId.split(',') : undefined,
+      stopIds: stopId ? stopId.split(',') : undefined,
+      params,
+    });
   }
 
   @Get(':id')

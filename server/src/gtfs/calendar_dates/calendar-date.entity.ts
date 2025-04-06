@@ -1,5 +1,12 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Calendar } from '../calendar/calendar.entity';
 
 export enum ExceptionType {
@@ -9,8 +16,12 @@ export enum ExceptionType {
 
 @Entity('calendar_dates')
 export class CalendarDate {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'ID of the service' })
-  @PrimaryColumn()
+  @Index()
+  @Column()
   service_id: string;
 
   @ApiProperty({ description: 'Date of the service exception' })

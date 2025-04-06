@@ -1,21 +1,24 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 import {
-  Entity,
-  Column,
-  PrimaryColumn,
-  OneToMany,
   BeforeInsert,
   BeforeUpdate,
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { Route } from '../routes/route.entity';
-import { IsNotEmpty, IsString, IsUrl, IsOptional } from 'class-validator';
 
 @Entity('agency')
 export class Agency {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'Unique identifier for the agency' })
-  @PrimaryColumn()
-  @IsNotEmpty()
-  @IsString()
+  @Index({ unique: true })
+  @Column()
   agency_id: string;
 
   @ApiProperty({ description: 'Full name of the agency' })

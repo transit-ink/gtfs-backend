@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { tripsService } from '../services/trips';
-import { routesService } from '../services/routes';
+import { Route, Trip } from '@/types/gtfs';
+import { useEffect, useState } from 'react';
 import FormModal from '../components/FormModal';
 import Pagination from '../components/Pagination';
+import { routesService } from '../services/routes';
+import { tripsService } from '../services/trips';
 
 const columns = [
   { key: 'trip_id', label: 'Trip ID' },
@@ -14,10 +15,10 @@ const columns = [
 ];
 
 export default function Trips() {
-  const [trips, setTrips] = useState([]);
-  const [routes, setRoutes] = useState([]);
+  const [trips, setTrips] = useState<Trip[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTrip, setEditingTrip] = useState(null);
+  const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
   const [formData, setFormData] = useState({
     trip_id: '',
     route_id: '',

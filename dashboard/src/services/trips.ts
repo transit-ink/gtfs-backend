@@ -1,10 +1,10 @@
+import { PaginatedResponse, Trip } from '../types/gtfs';
 import axios from '../utils/axios';
-import { Trip, PaginationParams, PaginatedResponse } from '../types/gtfs';
 
 export const tripsService = {
-  getAll: async (routeId: string, page = 1, limit = 10): Promise<PaginatedResponse<Trip>> => {
+  getAll: async (page = 1, limit = 10): Promise<PaginatedResponse<Trip>> => {
     const response = await axios.get('/gtfs/trips', {
-      params: { routeId, page, limit },
+      params: { page, limit },
     });
     return response.data;
   },

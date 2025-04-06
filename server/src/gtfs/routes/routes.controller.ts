@@ -1,27 +1,27 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
-  Body,
-  Param,
-  UseGuards,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
   ApiBearerAuth,
+  ApiOperation,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { UserRole } from '../../auth/entities/user.entity';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { PaginationParams } from '../../common/interfaces/pagination.interface';
 import { Route } from './route.entity';
 import { RoutesService } from './routes.service';
-import { PaginationParams } from '../../common/interfaces/pagination.interface';
 
 @ApiTags('Routes')
 @Controller('gtfs/routes')
@@ -62,18 +62,34 @@ export class RoutesController {
   })
   findAll(
     @Query('agencyId') agencyId: string,
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'ASC' | 'DESC',
   ) {
     const params: PaginationParams = {
-      page,
-      limit,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
       sortBy,
       sortOrder,
     };
     return this.routesService.findAll(agencyId, params);
+  }
+
+  @Get('bulk')
+  @ApiOperation({ summary: 'Get routes by IDs' })
+  @ApiQuery({
+    name: 'ids',
+    required: true,
+    description: 'Comma-separated list of route IDs',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the routes',
+    type: [Route],
+  })
+  findBulk(@Query('ids') ids: string): Promise<Route[]> {
+    return this.routesService.findBulk(ids.split(','));
   }
 
   @Get(':id')

@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
-import { ShapesService } from './shapes.service';
-import { Shape } from './shape.entity';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginationParams } from '../../common/interfaces/pagination.interface';
+import { Shape } from './shape.entity';
+import { ShapesService } from './shapes.service';
 
 @ApiTags('Shapes')
 @Controller('gtfs/shapes')
@@ -49,6 +49,25 @@ export class ShapesController {
       sortOrder,
     };
     return this.shapesService.findAll(params);
+  }
+
+  @Get('bulk')
+  @ApiOperation({ summary: 'Get shapes by multiple IDs' })
+  @ApiQuery({
+    name: 'ids',
+    required: true,
+    description: 'Comma-separated list of shape IDs',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns shapes matching the provided IDs',
+    type: [Shape],
+  })
+  async findByIds(@Query('ids') ids: string): Promise<Shape[]> {
+    const shapeIds = ids.split(',');
+    console.log(shapeIds);
+    return await this.shapesService.findByIds(shapeIds);
   }
 
   @Get(':id')

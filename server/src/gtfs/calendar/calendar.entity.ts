@@ -1,12 +1,22 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { CalendarDate } from '../calendar_dates/calendar-date.entity';
 import { Trip } from '../trips/trip.entity';
 
 @Entity('calendar')
 export class Calendar {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'ID of the service' })
-  @PrimaryColumn()
+  @Index({ unique: true })
+  @Column()
   service_id: string;
 
   @ApiProperty({

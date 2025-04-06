@@ -1,11 +1,21 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Trip } from '../trips/trip.entity';
 
 @Entity('shapes')
 export class Shape {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'ID of the shape' })
-  @PrimaryColumn()
+  @Index()
+  @Column()
   shape_id: string;
 
   @ApiProperty({ description: 'Latitude of the shape point' })

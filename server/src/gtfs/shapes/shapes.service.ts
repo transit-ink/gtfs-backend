@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Shape } from './shape.entity';
+import { In, Repository } from 'typeorm';
 import { PaginationParams } from '../../common/interfaces/pagination.interface';
+import { Shape } from './shape.entity';
 
 @Injectable()
 export class ShapesService {
@@ -43,5 +43,9 @@ export class ShapesService {
 
   async findById(id: string): Promise<Shape[]> {
     return this.shapeRepository.find({ where: { shape_id: id } });
+  }
+
+  async findByIds(ids: string[]): Promise<Shape[]> {
+    return this.shapeRepository.find({ where: { shape_id: In(ids) } });
   }
 }

@@ -1,12 +1,13 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
-  Entity,
   Column,
-  PrimaryColumn,
+  Entity,
+  Index,
+  JoinColumn,
   ManyToOne,
   OneToMany,
-  JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { Agency } from '../agency/agency.entity';
 import { Trip } from '../trips/trip.entity';
 
@@ -25,8 +26,12 @@ export enum RouteType {
 
 @Entity('routes')
 export class Route {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'ID of the route' })
-  @PrimaryColumn()
+  @Index({ unique: true })
+  @Column()
   route_id: string;
 
   @ApiProperty({ description: 'ID of the agency' })

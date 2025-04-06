@@ -1,10 +1,13 @@
 {
-  "name": "gtfs-backend",
+  "name": "gtfs-toolkit",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "workspaces": [
     "dashboard",
-    "server"
+    "server",
+    "scripts",
+    "ui"
   ],
   "scripts": {
     "format": "npx prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",

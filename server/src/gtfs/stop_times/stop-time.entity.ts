@@ -1,7 +1,15 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Trip } from '../trips/trip.entity';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Stop } from '../stops/stop.entity';
+import { Trip } from '../trips/trip.entity';
 
 export enum PickupType {
   REGULAR = 0,
@@ -19,8 +27,12 @@ export enum DropOffType {
 
 @Entity('stop_times')
 export class StopTime {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'ID of the trip' })
-  @PrimaryColumn()
+  @Index()
+  @Column()
   trip_id: string;
 
   @ApiProperty({ description: 'Arrival time at the stop' })

@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Stop } from './stop.entity';
+import { In, Repository } from 'typeorm';
 import {
-  PaginationParams,
   PaginatedResponse,
+  PaginationParams,
 } from '../../common/interfaces/pagination.interface';
+import { GtfsSearchResponseItem } from '../routes/gtfs.entity';
+import { Stop } from './stop.entity';
 
 @Injectable()
 export class StopsService {
@@ -50,6 +51,10 @@ export class StopsService {
       throw new NotFoundException(`Stop with ID ${id} not found`);
     }
     return stop;
+  }
+
+  async findByIds(ids: string[]): Promise<Stop[]> {
+    return this.stopRepository.find({ where: { stop_id: In(ids) } });
   }
 
   async create(stop: Stop): Promise<Stop> {
@@ -101,5 +106,27 @@ export class StopsService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  }
+
+  async search(query: string): Promise<GtfsSearchResponseItem[]> {
+    const ql = `
+      SELECT
+        json_build_object(
+          'stop_id', stops.stop_id,
+          'stop_name', stops.stop_name,
+          'stop_lat', stops.stop_lat,
+          'stop_lon', stops.stop_lon,
+          'stop_code', stops.stop_code,
+          'stop_desc', stops.stop_desc,
+          'stop_url', stops.stop_url
+        ) as stop,
+        similarity(stop_name, $1) AS score
+      FROM
+        stops
+      ORDER BY
+        score DESC
+      LIMIT 10
+    `;
+    return await this.stopRepository.query(ql, [query]);
   }
 }

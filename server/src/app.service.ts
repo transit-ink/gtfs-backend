@@ -8,7 +8,7 @@ export class AppService implements OnModuleInit {
   async onModuleInit() {
     try {
       await this.dbSyncService.syncAllEntities();
-      console.log('Database sync completed successfully on startup');
+      await this.dbSyncService.installPgExtensions();
     } catch (error) {
       console.error('Database sync failed on startup:', error);
       throw error;

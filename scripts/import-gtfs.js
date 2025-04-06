@@ -152,7 +152,7 @@ async function importGTFSFile(filePath, tableName) {
     const progressBar = createProgressBar(totalRecords);
 
     console.log(
-      `\nImporting ${totalRecords} records into ${tableName} (batch size: ${batchSize})...`
+      `Importing ${totalRecords} records into ${tableName} (batch size: ${batchSize})...`
     );
 
     for (let i = 0; i < totalRecords; i += batchSize) {
@@ -187,10 +187,10 @@ async function importGTFSData(gtfsPath) {
     for (const tableName of importOrder) {
       const file = fileMap.get(tableName);
       if (file) {
-        console.log(`Processing ${file}...`);
+        console.log(`\nProcessing ${file}...`);
         await importGTFSFile(path.join(gtfsPath, file), tableName);
       } else {
-        console.log(`Skipping ${tableName} - file not found`);
+        console.log(`\nSkipping ${tableName} - file not found`);
       }
     }
 

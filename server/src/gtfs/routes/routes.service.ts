@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Route } from './route.entity';
+import { In, Repository } from 'typeorm';
 import {
-  PaginationParams,
   PaginatedResponse,
+  PaginationParams,
 } from '../../common/interfaces/pagination.interface';
+import { GtfsSearchResponseItem } from './gtfs.entity';
+import { Route } from './route.entity';
 
 @Injectable()
 export class RoutesService {
@@ -51,6 +52,13 @@ export class RoutesService {
     };
   }
 
+  async findBulk(ids: string[]): Promise<Route[]> {
+    const routes = await this.routesRepository.find({
+      where: { route_id: In(ids) },
+    });
+    return routes;
+  }
+
   async findOne(id: string): Promise<Route> {
     const route = await this.routesRepository.findOneBy({ route_id: id });
     if (!route) {
@@ -75,5 +83,29 @@ export class RoutesService {
     const existingRoute = await this.findOne(id);
     const updatedRoute = this.routesRepository.merge(existingRoute, route);
     return this.routesRepository.save(updatedRoute);
+  }
+
+  async search(query: string): Promise<GtfsSearchResponseItem[]> {
+    const ql = `
+      SELECT
+        json_build_object(
+          'route_id', routes.route_id,
+          'agency_id', routes.agency_id,
+          'route_short_name', routes.route_short_name,
+          'route_long_name', routes.route_long_name,
+          'route_desc', routes.route_desc,
+          'route_type', routes.route_type,
+          'route_url', routes.route_url,
+          'route_color', routes.route_color,
+          'route_text_color', routes.route_text_color
+        ) as route,
+        similarity(route_short_name, $1) AS score
+      FROM
+        routes
+      ORDER BY
+        score DESC
+      LIMIT 10
+    `;
+    return await this.routesRepository.query(ql, [query]);
   }
 }

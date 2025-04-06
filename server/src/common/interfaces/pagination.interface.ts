@@ -3,6 +3,7 @@ export interface PaginationParams {
   limit?: number;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
+  routeId?: string;
 }
 
 export interface PaginatedResponse<T> {

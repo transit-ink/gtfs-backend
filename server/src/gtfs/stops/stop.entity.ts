@@ -1,5 +1,11 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { StopTime } from '../stop_times/stop-time.entity';
 
 export enum LocationType {
@@ -18,8 +24,12 @@ export enum WheelchairBoarding {
 
 @Entity('stops')
 export class Stop {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'Unique identifier for the stop' })
-  @PrimaryColumn()
+  @Index({ unique: true })
+  @Column()
   stop_id: string;
 
   @ApiProperty({

@@ -1,27 +1,27 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
-  Body,
-  Param,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
   ApiBearerAuth,
+  ApiOperation,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { UserRole } from '../../auth/entities/user.entity';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { PaginationParams } from '../../common/interfaces/pagination.interface';
 import { Stop } from './stop.entity';
 import { StopsService } from './stops.service';
-import { PaginationParams } from '../../common/interfaces/pagination.interface';
 
 @ApiTags('Stops')
 @Controller('gtfs/stops')
@@ -56,26 +56,18 @@ export class StopsController {
     type: [Stop],
   })
   findAll(
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'ASC' | 'DESC',
   ) {
     const params: PaginationParams = {
-      page,
-      limit,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
       sortBy,
       sortOrder,
     };
     return this.stopsService.findAll(params);
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a stop by ID' })
-  @ApiResponse({ status: 200, description: 'Returns the stop', type: Stop })
-  @ApiResponse({ status: 404, description: 'Stop not found' })
-  findById(@Param('id') id: string): Promise<Stop> {
-    return this.stopsService.findById(id);
   }
 
   @Post()
@@ -90,20 +82,6 @@ export class StopsController {
   })
   create(@Body() stop: Stop): Promise<Stop> {
     return this.stopsService.create(stop);
-  }
-
-  @Put(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Update a stop' })
-  @ApiResponse({
-    status: 200,
-    description: 'The stop has been successfully updated.',
-    type: Stop,
-  })
-  update(@Param('id') id: string, @Body() stop: Stop): Promise<Stop> {
-    return this.stopsService.update(id, stop);
   }
 
   @Get('nearby')
@@ -141,20 +119,64 @@ export class StopsController {
     type: [Stop],
   })
   findByLatLon(
-    @Query('lat') lat: number,
-    @Query('lon') lon: number,
-    @Query('radius') radius: number,
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('lat') lat: string,
+    @Query('lon') lon: string,
+    @Query('radius') radius: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'ASC' | 'DESC',
   ) {
     const params: PaginationParams = {
-      page,
-      limit,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
       sortBy,
       sortOrder,
     };
-    return this.stopsService.findByLatLon(lat, lon, radius, params);
+    return this.stopsService.findByLatLon(
+      parseFloat(lat),
+      parseFloat(lon),
+      parseFloat(radius),
+      params,
+    );
+  }
+
+  @Get('bulk')
+  @ApiOperation({ summary: 'Get stops by multiple IDs' })
+  @ApiQuery({
+    name: 'ids',
+    required: true,
+    description: 'Comma-separated list of stop IDs',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns stops matching the provided IDs',
+    type: [Stop],
+  })
+  findByIds(@Query('ids') ids: string): Promise<Stop[]> {
+    return this.stopsService.findByIds(ids.split(','));
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a stop by ID' })
+  @ApiResponse({ status: 200, description: 'Returns the stop', type: Stop })
+  @ApiResponse({ status: 404, description: 'Stop not found' })
+  findById(@Param('id') id: string): Promise<Stop> {
+    return this.stopsService.findById(id);
+  }
+
+  @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a stop' })
+  @ApiResponse({
+    status: 200,
+    description: 'The stop has been successfully updated.',
+    type: Stop,
+  })
+  update(@Param('id') id: string, @Body() stop: Stop): Promise<Stop> {
+    return this.stopsService.update(id, stop);
   }
 }

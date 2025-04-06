@@ -1,26 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { User, UserRole } from '../auth/entities/user.entity';
 import { Agency } from '../gtfs/agency/agency.entity';
-import { LocationType, Stop } from '../gtfs/stops/stop.entity';
-import { Route } from '../gtfs/routes/route.entity';
-import {
-  BikesAllowed,
-  Trip,
-  WheelchairAccessible,
-} from '../gtfs/trips/trip.entity';
-import {
-  PickupType,
-  DropOffType,
-  StopTime,
-} from '../gtfs/stop_times/stop-time.entity';
 import { Calendar } from '../gtfs/calendar/calendar.entity';
 import {
   CalendarDate,
   ExceptionType,
 } from '../gtfs/calendar_dates/calendar-date.entity';
+import { Route } from '../gtfs/routes/route.entity';
 import { Shape } from '../gtfs/shapes/shape.entity';
-import { User, UserRole } from '../auth/entities/user.entity';
+import {
+  DropOffType,
+  PickupType,
+  StopTime,
+} from '../gtfs/stop_times/stop-time.entity';
+import { LocationType, Stop } from '../gtfs/stops/stop.entity';
+import {
+  BikesAllowed,
+  Trip,
+  WheelchairAccessible,
+} from '../gtfs/trips/trip.entity';
 
 @Injectable()
 export class DbSyncService {
@@ -98,6 +98,15 @@ export class DbSyncService {
     await this.syncUsers();
 
     this.logger.log('Database synchronization completed');
+  }
+
+  async installPgExtensions(): Promise<void> {
+    this.logger.log('Installing PostgreSQL extensions...');
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.query('CREATE EXTENSION IF NOT EXISTS pg_trgm;');
+    await queryRunner.release();
+    this.logger.log('PostgreSQL extensions installed successfully');
   }
 
   private async syncEnums(): Promise<void> {

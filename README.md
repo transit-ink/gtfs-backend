@@ -1,4 +1,17 @@
-# GTFS Backend
+# GTFS Toolkit
+
+A suite of Web applications and tools to make working with transit data easier.
+
+Main components:
+
+- Backend Server
+- Scripts
+- Dashboard
+- End-user Interface
+
+### Getting started
+
+- Create a `.env` file in `server`, `scripts`, `dashboard`, and `ui` folders with `.env.example` as reference.
 
 Server code and scripts to work with [GTFS Dashboard](https://github.com/transit-ink/gtfs-dashboard) and [GTFS UI](https://github.com/transit-ink/gtfs-ui)
 

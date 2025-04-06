@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { StopTime } from './stop-time.entity';
 import {
-  PaginationParams,
   PaginatedResponse,
+  PaginationParams,
 } from '../../common/interfaces/pagination.interface';
+import { StopTime } from './stop-time.entity';
 
 @Injectable()
 export class StopTimesService {
@@ -14,10 +14,12 @@ export class StopTimesService {
     private stopTimesRepository: Repository<StopTime>,
   ) {}
 
-  async findAll(
-    tripId?: string,
-    params?: PaginationParams,
-  ): Promise<PaginatedResponse<StopTime>> {
+  async findAll(findData: {
+    tripIds?: string[];
+    stopIds?: string[];
+    params?: PaginationParams;
+  }): Promise<PaginatedResponse<StopTime>> {
+    const { tripIds, stopIds, params } = findData;
     const {
       page = 1,
       limit = 10,
@@ -28,8 +30,12 @@ export class StopTimesService {
     const queryBuilder =
       this.stopTimesRepository.createQueryBuilder('stop_time');
 
-    if (tripId) {
-      queryBuilder.where('stop_time.trip_id = :tripId', { tripId });
+    if (tripIds) {
+      queryBuilder.where('stop_time.trip_id IN (:...tripIds)', { tripIds });
+    }
+
+    if (stopIds) {
+      queryBuilder.where('stop_time.stop_id IN (:...stopIds)', { stopIds });
     }
 
     // Add sorting

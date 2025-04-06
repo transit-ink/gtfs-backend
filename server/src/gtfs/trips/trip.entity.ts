@@ -1,16 +1,18 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
-  Entity,
   Column,
-  PrimaryColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
-  JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
-import { Route } from '../routes/route.entity';
-import { StopTime } from '../stop_times/stop-time.entity';
 import { Calendar } from '../calendar/calendar.entity';
+import { Route } from '../routes/route.entity';
 import { Shape } from '../shapes/shape.entity';
+import { StopTime } from '../stop_times/stop-time.entity';
 
 export enum WheelchairAccessible {
   NO_INFO = 0,
@@ -26,8 +28,12 @@ export enum BikesAllowed {
 
 @Entity('trips')
 export class Trip {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty({ description: 'Unique identifier for the trip' })
-  @PrimaryColumn()
+  @Index({ unique: true })
+  @Column()
   trip_id: string;
 
   @ApiProperty({ description: 'ID of the route that this trip belongs to' })
@@ -89,7 +95,7 @@ export class Trip {
   @JoinColumn({ name: 'service_id', referencedColumnName: 'service_id' })
   calendar: Calendar;
 
-  @ManyToOne(() => Shape, (shape) => shape.trips)
+  @ManyToMany(() => Shape, (shape) => shape.trips)
   @JoinColumn({ name: 'shape_id', referencedColumnName: 'shape_id' })
   shape: Shape;
 
